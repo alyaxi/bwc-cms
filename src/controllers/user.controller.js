@@ -4,6 +4,7 @@ const ApiError = require('../utils/ApiError');
 const { userService } = require('../services');
 
 const getUsers = catchAsync(async (req, res) => {
+	console.log("asadsadsadasads")
 	const users = await userService.getUsers(req);
 	res.send({ users });
 });

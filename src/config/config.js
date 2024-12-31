@@ -82,6 +82,7 @@ module.exports = {
 		user: envVars.SQL_USERNAME,
 		host: envVars.SQL_HOST,
 		database: envVars.SQL_DATABASE_NAME,
+		port: '5432',
 		password: envVars.SQL_PASSWORD,
 		dialect: envVars.SQL_DIALECT,
 		pool: {

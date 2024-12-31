@@ -2,30 +2,41 @@ const httpStatus = require('http-status');
 const { roles } = require('../config/roles');
 const ApiError = require('../utils/ApiError');
 
-function grantAccess(action, resource) {
-	return async (req, _res, next) => {
-		try {
-			// eslint-disable-next-line eqeqeq
-			const isOwnedUser = req.user.userId == req.params.userId;
-			const modifiedAction = isOwnedUser
-				? action.replace('Any', 'Own')
-				: action;
+const grantAccess = (action, resource) => {
+  return async (req, res, next) => {
+    try {
+      console.log(req.user, "ROLEEEEEEEEEEEEEE");
 
-			const permission = roles
-				.can(JSON.stringify(req.user.roleId))
-				[modifiedAction](resource);
+      const roleId = req.user.roleId?.toString(); // Ensure roleId is a string
+      console.log(roleId, "roleeeeeeeeeeeeeeeeeeeeee");
 
-			if (!permission.granted) {
-				throw new ApiError(
-					httpStatus.FORBIDDEN,
-					"You don't have enough permission to perform this action"
-				);
-			}
-			next();
-		} catch (error) {
-			next(error);
-		}
-	};
-}
+      // Validate if the role exists
+      if (!roles.getGrants()[roleId]) {
+        return res.status(httpStatus.FORBIDDEN).json({
+          message: "Invalid role ID or no permissions configured for this role.",
+        });
+      }
+
+      const actionResource = `${action.toLowerCase()}:${resource}`;
+      console.log(actionResource, "actionResource");
+
+      // Check permissions
+      const permission = roles.can(roleId)[action](resource);
+      console.log(permission, "permissioneeeeeeeeeeeeeeeeeeee");
+
+      // Check if permission is granted
+      if (!permission.granted) {
+        return res.status(httpStatus.FORBIDDEN).json({
+          message: "You don't have enough permission to perform this action",
+        });
+      }
+
+      next();
+    } catch (error) {
+      console.error("Error in grantAccess middleware:", error);
+      next(error);
+    }
+  };
+};
 
 module.exports = { grantAccess };
