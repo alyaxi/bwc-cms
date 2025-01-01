@@ -5,13 +5,26 @@ const { decryptData } = require('../utils/auth');
 
 async function loginUserWithEmailAndPassword(req) {
 	const { email, password } = req.body;
+	if (!email || !password) {
+		throw new ApiError(
+			httpStatus.BAD_REQUEST,
+			'Please provide email and password'
+		);
+	}
 	const user = await userService.getUserByEmail(email);
-	const isPasswordMatch = await decryptData(password, user.password);
 
-	if (!user || !isPasswordMatch) {
+	if (!user) {
 		throw new ApiError(
 			httpStatus.UNAUTHORIZED,
-			'Invalid email or password'
+			'User does not exist'
+		);
+	}
+
+	const isPasswordMatch = await decryptData(password, user?.password);
+	if (!isPasswordMatch) {
+		throw new ApiError(
+			httpStatus.UNAUTHORIZED,
+			'Incorrect email or password'
 		);
 	}
 
