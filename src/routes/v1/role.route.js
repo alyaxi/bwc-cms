@@ -16,7 +16,7 @@ router
 		roleController.getRoles
 	)
 	.post(
-		grantAccess('createAny', resources.ROLE),
+		grantAccess('createAny', resources.ROLE), // Only ADMIN allowed
 		validate(roleValidation.createRole),
 		roleController.createRole
 	);
@@ -29,12 +29,12 @@ router
 		roleController.getRole
 	)
 	.patch(
-		grantAccess('updateAny', resources.ROLE),
-		validate(roleValidation.updateUser),
+		grantAccess('updateAny', resources.ROLE), // Only ADMIN & SUBADMIN
+		validate(roleValidation.updateRole),
 		roleController.updateRole
 	)
 	.delete(
-		grantAccess('deleteAny', resources.ROLE),
+		grantAccess('deleteAny', resources.ROLE), // Only ADMIN allowed
 		validate(roleValidation.deleteRole),
 		roleController.deleteRole
 	);

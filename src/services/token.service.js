@@ -6,6 +6,7 @@ const { generateToken, generateExpires } = require('../utils/auth');
 
 async function generateResetPasswordToken(email) {
 	const user = await userService.getUserByEmail(email);
+	console.log(user, "userrrrrrrrr")
 	if (!user || !user.id) {
 		throw new ApiError(
 			httpStatus.NOT_FOUND,
@@ -22,11 +23,12 @@ async function generateResetPasswordToken(email) {
 }
 
 async function generateAuthTokens({ userId, roleId }) {
+	console.log(roleId, "roleeeeeeeeeeeeid")
 	const refreshTokenExpires = generateExpires(
 		config.jwt.refreshExpirationDays * 24
 	);
 
-	const refreshToken = generateToken({ userId }, refreshTokenExpires);
+	const refreshToken = generateToken({ userId, roleId }, refreshTokenExpires);
 
 	const accessTokenExpires = generateExpires(
 		config.jwt.accessExpirationMinutes / 60

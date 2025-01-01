@@ -3,16 +3,20 @@ const bycrypt = require('bcrypt');
 const config = require('../config/config');
 
 function generateToken(data, expiresMs, secret = config.jwt.secret) {
+	// const token2 = req.headers['authorization']?.split(' ')[1];
+	console.log(data, "newDataaaaaaaaa")
 	const token = jwt.sign(
 		{ exp: Math.floor(expiresMs / 1000), ...data },
 		secret
 	);
+	console.log(token, "tokennnnnnnnnn")
 	return token;
 }
 
 async function verifyToken(token) {
 	try {
 		const payload = jwt.verify(token, config.jwt.secret);
+		console.log({payload})
 		return payload;
 	} catch (err) {
 		throw new Error(`Invalid token: ${err}`);

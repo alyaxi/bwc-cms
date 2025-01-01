@@ -4,8 +4,10 @@ const ac = new AccessControl();
 
 const roleIds = {
 	ADMIN: '1',
-	USER: '2',
+	SUBADMIN: '2',
+	USER: '3',
 };
+
 
 const resources = {
 	USERINFO: 'user',
@@ -27,6 +29,15 @@ const grantsObject = {
 			'delete:any': ['*'],
 		},
 	},
+	[roleIds.SUBADMIN]: {
+		[resources.USERINFO]: {
+			'read:any': ['*'],
+			'update:any': ['*'],
+		},
+		[resources.ROLE]: {
+			'read:any': ['*'],
+		},
+	},
 	[roleIds.USER]: {
 		[resources.USERINFO]: {
 			'create:own': ['*'],
@@ -36,6 +47,7 @@ const grantsObject = {
 		},
 	},
 };
+
 
 const roles = (function () {
 	ac.setGrants(grantsObject);
