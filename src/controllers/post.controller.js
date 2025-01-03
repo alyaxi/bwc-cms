@@ -36,7 +36,7 @@ const updatePost = async (req, res) => {
 	try {
 		const updatedPost = await postService.updatePost(req.params.id, req.body);
 		if (!updatedPost) return res.status(404).json({ error: 'Post not found' });
-		res.status(200).json({
+		res.send().status(200).json({
 			message: 'Post updated successfully',
 			updatedPost,
 		});
